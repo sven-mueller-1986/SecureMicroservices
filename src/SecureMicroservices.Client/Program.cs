@@ -7,7 +7,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddTransient<AuthorizationHandler>();
 
-builder.Services.AddControllers();
 builder.Services.AddRazorPages();
 
 var apiBaseAddress = builder.Configuration["ApiSettings:GatewayAddress"];
@@ -44,6 +43,5 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapRazorPages();
-app.MapControllers();
 
 app.Run();
