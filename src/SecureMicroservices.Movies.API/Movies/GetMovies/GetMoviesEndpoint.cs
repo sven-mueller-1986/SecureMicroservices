@@ -14,6 +14,7 @@ public class GetMoviesEndpoint : ICarterModule
             var response = result.Adapt<GetMoviesResponse>();
 
             return Results.Ok(response);
-        });
+        })
+        .RequireAuthorization();
     }
 }

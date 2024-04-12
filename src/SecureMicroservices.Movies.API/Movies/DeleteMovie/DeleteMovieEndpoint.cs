@@ -14,6 +14,7 @@ public class DeleteMovieEndpoint : ICarterModule
             var response = result.Adapt<DeleteMovieResponse>();
 
             return Results.Ok(response);
-        });
+        })
+        .RequireAuthorization();
     }
 }

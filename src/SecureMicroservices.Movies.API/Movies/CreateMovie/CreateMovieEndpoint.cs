@@ -16,6 +16,7 @@ public class CreateMovieEndpoint : ICarterModule
             var response = result.Adapt<CreateMovieResponse>();
 
             return Results.Ok(response);
-        });
+        })
+        .RequireAuthorization();
     }
 }

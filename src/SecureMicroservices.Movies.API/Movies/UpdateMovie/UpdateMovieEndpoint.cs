@@ -16,6 +16,7 @@ public class UpdateMovieEndpoint : ICarterModule
             var response = result.Adapt<UpdateMovieResponse>();
 
             return Results.Ok(response);
-        });
+        })
+        .RequireAuthorization();
     }
 }
