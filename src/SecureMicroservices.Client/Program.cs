@@ -1,29 +1,64 @@
-﻿using Refit;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Refit;
 using SecureMicroservices.Client.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddScoped<ITokenService, TokenService>();
-builder.Services.AddTransient<AuthorizationHandler>();
+//builder.Services.AddScoped<ITokenService, TokenService>();
+//builder.Services.AddTransient<AuthorizationHandler>();
 
-builder.Services.AddRazorPages();
+//var apiBaseAddress = builder.Configuration["ApiSettings:GatewayAddress"];
+//ArgumentException.ThrowIfNullOrWhiteSpace(apiBaseAddress, "ApiSettings:GatewayAddress");
 
-var apiBaseAddress = builder.Configuration["ApiSettings:GatewayAddress"];
-ArgumentException.ThrowIfNullOrWhiteSpace(apiBaseAddress, "ApiSettings:GatewayAddress");
+//builder.Services.AddRefitClient<IMovieApi>()
+//    .ConfigureHttpClient(config =>
+//    {
+//        config.BaseAddress = new Uri(apiBaseAddress);
+//    })
+//    .AddHttpMessageHandler<AuthorizationHandler>();
 
-builder.Services.AddRefitClient<IMovieApi>()
-    .ConfigureHttpClient(config =>
+//builder.Services.AddRefitClient<IIdentityApi>()
+//    .ConfigureHttpClient(config =>
+//    {
+//        config.BaseAddress = new Uri(builder.Configuration["ApiSettings:IdentityAddress"]!);
+//    });
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultAuthenticateScheme = OpenIdConnectDefaults.AuthenticationScheme;
+})
+    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
     {
-        config.BaseAddress = new Uri(apiBaseAddress);
+        options.Cookie.SameSite = SameSiteMode.None;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        options.Cookie.IsEssential = true;
     })
-    .AddHttpMessageHandler<AuthorizationHandler>();
-
-builder.Services.AddRefitClient<IIdentityApi>()
-    .ConfigureHttpClient(config =>
+    .AddOpenIdConnect(options =>
     {
-        config.BaseAddress = new Uri(builder.Configuration["ApiSettings:IdentityAddress"]!);
+        options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+
+        options.Authority = "https://localhost:5059";
+
+        options.ClientId = "movies_mvc_client";
+        options.ClientSecret = "secret";
+        options.ResponseType = "code";
+
+        options.Scope.Add("openid");
+        options.Scope.Add("profile");
+
+        options.SaveTokens = true;
+
+        options.GetClaimsFromUserInfoEndpoint = true;
     });
+
+builder.Services.AddAuthorization();
+builder.Services.AddRazorPages(options =>
+{
+    options.Conventions.AuthorizeFolder("/Movies");
+});
 
 var app = builder.Build();
 
@@ -40,6 +75,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();

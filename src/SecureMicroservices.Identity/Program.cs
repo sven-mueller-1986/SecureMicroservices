@@ -12,10 +12,22 @@ builder.Services.AddIdentityServer()
     .AddTestUsers(Configuration.TestUsers)
     .AddDeveloperSigningCredential();
 
+builder.Services.AddControllersWithViews();
+
 var app = builder.Build();
 
 // Configure HTTPS pipeline
 
 app.UseIdentityServer();
+
+app.UseStaticFiles();
+app.UseRouting();
+
+app.UseAuthorization();
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapDefaultControllerRoute();
+});
 
 app.Run();

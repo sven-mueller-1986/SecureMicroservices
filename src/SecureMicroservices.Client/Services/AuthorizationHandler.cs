@@ -2,14 +2,14 @@
 
 namespace SecureMicroservices.Client.Services;
 
-public class AuthorizationHandler(ITokenService tokenService)
+public class AuthorizationHandler()
     : DelegatingHandler
 {
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        var token = await tokenService.GetTokenAsync();
+        //var token = await tokenService.GetTokenAsync();
 
-        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer",  token);
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer",  string.Empty);
 
         return await base.SendAsync(request, cancellationToken);
     }
