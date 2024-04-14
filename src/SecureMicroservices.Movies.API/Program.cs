@@ -38,7 +38,7 @@ builder.Services.AddAuthentication("Bearer")
 builder.Services.AddAuthorizationBuilder()
     .AddDefaultPolicy("authorized", policy =>
         policy
-            .RequireClaim("client_id", "movieClient")
+            .RequireClaim("client_id", "movieClient", "movies_mvc_client")
             .RequireClaim("scope", "movieAPI"));
 
 var app = builder.Build();

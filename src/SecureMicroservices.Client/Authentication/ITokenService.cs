@@ -1,4 +1,4 @@
-﻿namespace SecureMicroservices.Client.Services;
+﻿namespace SecureMicroservices.Client.Authentication;
 
 public interface ITokenService
 {

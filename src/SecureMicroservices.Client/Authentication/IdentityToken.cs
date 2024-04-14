@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace SecureMicroservices.Client.Models;
+namespace SecureMicroservices.Client.Authentication;
 
 public class IdentityToken
 {

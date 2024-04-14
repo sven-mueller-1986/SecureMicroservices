@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34723.18
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecureMicroservices.Movies.API", "SecureMicroservices.Movies.API\SecureMicroservices.Movies.API.csproj", "{F81FAD00-77CE-428A-B961-084C36AF5072}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecureMicroservices.Movies.API", "SecureMicroservices.Movies.API\SecureMicroservices.Movies.API.csproj", "{F81FAD00-77CE-428A-B961-084C36AF5072}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecureMicroservices.Identity", "SecureMicroservices.Identity\SecureMicroservices.Identity.csproj", "{2310F2C3-0B52-4C8F-AB31-BDA62D134BD8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecureMicroservices.Identity", "SecureMicroservices.Identity\SecureMicroservices.Identity.csproj", "{2310F2C3-0B52-4C8F-AB31-BDA62D134BD8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecureMicroservices.Client", "SecureMicroservices.Client\SecureMicroservices.Client.csproj", "{5DE43AFF-0EC8-4994-85FA-0A9251426C26}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecureMicroservices.Client", "SecureMicroservices.Client\SecureMicroservices.Client.csproj", "{5DE43AFF-0EC8-4994-85FA-0A9251426C26}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,7 +1,6 @@
 ﻿using Refit;
-using SecureMicroservices.Client.Models;
 
-namespace SecureMicroservices.Client.Services;
+namespace SecureMicroservices.Client.Authentication;
 
 public interface IIdentityApi
 {

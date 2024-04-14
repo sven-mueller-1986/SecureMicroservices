@@ -1,35 +1,38 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Refit;
+using SecureMicroservices.Client.Authentication;
 using SecureMicroservices.Client.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-//builder.Services.AddScoped<ITokenService, TokenService>();
-//builder.Services.AddTransient<AuthorizationHandler>();
+// OID Code flow
+//builder.Services.AddSingleton<ITokenService, TokenService>();
 
-//var apiBaseAddress = builder.Configuration["ApiSettings:GatewayAddress"];
-//ArgumentException.ThrowIfNullOrWhiteSpace(apiBaseAddress, "ApiSettings:GatewayAddress");
+// OID Hybrid Flow
+builder.Services.AddScoped<ITokenService, TokenHybridService>();
 
-//builder.Services.AddRefitClient<IMovieApi>()
-//    .ConfigureHttpClient(config =>
-//    {
-//        config.BaseAddress = new Uri(apiBaseAddress);
-//    })
-//    .AddHttpMessageHandler<AuthorizationHandler>();
+builder.Services.AddTransient<AuthenticationHandler>();
 
-//builder.Services.AddRefitClient<IIdentityApi>()
-//    .ConfigureHttpClient(config =>
-//    {
-//        config.BaseAddress = new Uri(builder.Configuration["ApiSettings:IdentityAddress"]!);
-//    });
+var apiBaseAddress = builder.Configuration["ApiSettings:GatewayAddress"];
+ArgumentException.ThrowIfNullOrWhiteSpace(apiBaseAddress, "ApiSettings:GatewayAddress");
 
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    options.DefaultAuthenticateScheme = OpenIdConnectDefaults.AuthenticationScheme;
-})
+builder.Services.AddRefitClient<IMovieApi>()
+    .ConfigureHttpClient(config =>
+    {
+        config.BaseAddress = new Uri(apiBaseAddress);
+    })
+    .AddHttpMessageHandler<AuthenticationHandler>();
+
+builder.Services.AddRefitClient<IIdentityApi>()
+    .ConfigureHttpClient(config =>
+    {
+        config.BaseAddress = new Uri(builder.Configuration["ApiSettings:IdentityAddress"]!);
+    });
+
+builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
     .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
     {
         options.Cookie.SameSite = SameSiteMode.None;
@@ -44,15 +47,28 @@ builder.Services.AddAuthentication(options =>
 
         options.ClientId = "movies_mvc_client";
         options.ClientSecret = "secret";
-        options.ResponseType = "code";
+        options.ResponseType = OpenIdConnectResponseType.CodeIdToken;
 
         options.Scope.Add("openid");
         options.Scope.Add("profile");
+        options.Scope.Add("movieAPI");
 
         options.SaveTokens = true;
 
         options.GetClaimsFromUserInfoEndpoint = true;
     });
+
+// OID Hybrid Flow
+builder.Services.AddHttpContextAccessor();
+
+// OID Code flow
+//builder.Services.AddSingleton(new ClientCredential
+//(
+//    grantType: "client_credentials",
+//    scope: "movieAPI",
+//    clientId: "movieClient",
+//    clientSecret: "secret"
+//));
 
 builder.Services.AddAuthorization();
 builder.Services.AddRazorPages(options =>

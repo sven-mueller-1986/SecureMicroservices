@@ -1,4 +1,4 @@
-﻿namespace SecureMicroservices.Client.Models;
+﻿namespace SecureMicroservices.Client.Authentication;
 
 public class BearerToken
 {
