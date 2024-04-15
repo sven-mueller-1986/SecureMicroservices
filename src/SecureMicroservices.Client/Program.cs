@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using IdentityModel;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Microsoft.IdentityModel.Tokens;
 using Refit;
 using SecureMicroservices.Client.Authentication;
 using SecureMicroservices.Client.Services;
@@ -30,7 +33,8 @@ builder.Services.AddRefitClient<IIdentityApi>()
     .ConfigureHttpClient(config =>
     {
         config.BaseAddress = new Uri(builder.Configuration["ApiSettings:IdentityAddress"]!);
-    });
+    })
+    .AddHttpMessageHandler<AuthenticationHandler>();
 
 builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
     .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
@@ -49,13 +53,25 @@ builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
         options.ClientSecret = "secret";
         options.ResponseType = OpenIdConnectResponseType.CodeIdToken;
 
-        options.Scope.Add("openid");
-        options.Scope.Add("profile");
+        //options.Scope.Add("openid");
+        //options.Scope.Add("profile");
+        options.Scope.Add("address");
+        options.Scope.Add("email");
+        options.Scope.Add("roles");
         options.Scope.Add("movieAPI");
+
+        options.ClaimActions.MapUniqueJsonKey("role", "role");
+        options.ClaimActions.MapUniqueJsonKey("address", "address");
 
         options.SaveTokens = true;
 
         options.GetClaimsFromUserInfoEndpoint = true;
+
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            NameClaimType = JwtClaimTypes.GivenName,
+            RoleClaimType = JwtClaimTypes.Role
+        };
     });
 
 // OID Hybrid Flow

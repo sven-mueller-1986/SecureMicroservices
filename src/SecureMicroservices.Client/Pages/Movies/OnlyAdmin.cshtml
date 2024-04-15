@@ -1,0 +1,34 @@
+﻿@page
+@model SecureMicroservices.Client.Pages.Movies.OnlyAdminModel
+@{
+    ViewData["Title"] = "Only Admins";
+}
+<h1>Only Admins </h1>
+
+@Model.UserInfo
+
+@* <table>
+    <thead>
+        <tr>
+            <th>
+                Claim Type
+            </th>
+            <th>
+                Claim Value
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var claim in Model.UserInfo.UserInfoDictionary)
+        {
+            <tr>
+                <tb>
+                    @Html.DisplayFor(modelItem => claim.Key)
+                </tb>
+                <tb>
+                    @Html.DisplayFor(modelItem => claim.Value)
+                </tb>
+            </tr>
+        }
+    </tbody>
+</table> *@
